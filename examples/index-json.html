@@ -25,8 +25,8 @@
   });
   
   function drawRadar() {
-    var sectors =  data['sectors'].map(function(sector) {
-      return sector.name;
+    var quadrant_data =  data['quadrants'].map(function(quadrant) {
+      return quadrant.name;
     });
     var adopt = new tr.models.Cycle('Adopt', 0);
     var assess = new tr.models.Cycle('Assess', 1);
@@ -36,20 +36,20 @@
     var quadrants = [];
 
     var radar = new tr.models.Radar();
-    for (var sectorIndex=0; sectorIndex<data['sectors'].length; sectorIndex++) {
-      var sector = data['sectors'][sectorIndex];
-      console.log(sector.name)
-      var quadrant = new tr.models.Quadrant(sector.name);
-      var adoptBlips = sector.adopt.map(function(itemName) {
+    for (var quadrantIndex=0; quadrantIndex<data['quadrants'].length; quadrantIndex++) {
+      var quadrant_data = data['quadrants'][quadrantIndex];
+      console.log(quadrant_data.name)
+      var quadrant = new tr.models.Quadrant(quadrant_data.name);
+      var adoptBlips = quadrant_data.adopt.map(function(itemName) {
 	return new tr.models.Blip(itemName, adopt, true);
       });
-      var trialBlips = sector.trial.map(function(itemName) {
+      var trialBlips = quadrant_data.trial.map(function(itemName) {
 	return new tr.models.Blip(itemName, trial, true);
       });
-      var assessBlips = sector.assess.map(function(itemName) {
+      var assessBlips = quadrant_data.assess.map(function(itemName) {
 	return new tr.models.Blip(itemName, assess, true);
       });
-      var holdBlips = sector.hold.map(function(itemName) {
+      var holdBlips = quadrant_data.hold.map(function(itemName) {
 	return new tr.models.Blip(itemName, hold, true);
       });
       var blips = [].concat(adoptBlips, trialBlips, assessBlips, holdBlips);
