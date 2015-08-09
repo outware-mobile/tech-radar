@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Thoughtworks Radar 2014</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
+  <script src="chance.js"></script>
+  <script src="d3.min.js"></script>
+  <script src="tech-radar.min.js"></script>
+  <link href="base.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <div id="radar">
+  </div>
+  <div id="ref-table"></div>
+</body>
+<script>
+
+  var data;
+
+  d3.json("radar-data.json", function(error, json) {
+    if (error) return console.warn(error);
+    data = json;
+    drawRadar();
+  });
+  
+  function drawRadar() {
+    var sectors =  data['sectors'].map(function(sector) {
+      return sector.name;
+    });
+    var adopt = new tr.models.Cycle('Adopt', 0);
+    var assess = new tr.models.Cycle('Assess', 1);
+    var trial = new tr.models.Cycle('Trial', 2);
+    var hold = new tr.models.Cycle('Hold', 3);
+
+    var quadrants = [];
+
+    var radar = new tr.models.Radar();
+    for (var sectorIndex=0; sectorIndex<data['sectors'].length; sectorIndex++) {
+      var sector = data['sectors'][sectorIndex];
+      console.log(sector.name)
+      var quadrant = new tr.models.Quadrant(sector.name);
+      var adoptBlips = sector.adopt.map(function(itemName) {
+	return new tr.models.Blip(itemName, adopt, true);
+      });
+      var trialBlips = sector.trial.map(function(itemName) {
+	return new tr.models.Blip(itemName, trial, true);
+      });
+      var assessBlips = sector.assess.map(function(itemName) {
+	return new tr.models.Blip(itemName, assess, true);
+      });
+      var holdBlips = sector.hold.map(function(itemName) {
+	return new tr.models.Blip(itemName, hold, true);
+      });
+      var blips = [].concat(adoptBlips, trialBlips, assessBlips, holdBlips);
+      console.log(blips);
+      quadrant.add(blips);
+      quadrants.push(quadrant);
+    }
+    radar.setFirstQuadrant(quadrants[0]);
+    radar.setSecondQuadrant(quadrants[1]);
+    radar.setThirdQuadrant(quadrants[2]);
+    radar.setFourthQuadrant(quadrants[3]);
+
+    var radarGraph = new tr.graphing.Radar(1080, radar);
+    radarGraph.init('#radar').plot();
+    var refTable = new tr.graphing.RefTable(radar);
+    refTable.init('#ref-table').render();
+  }
+
+</script>
+</html>
