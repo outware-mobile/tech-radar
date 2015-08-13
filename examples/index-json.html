@@ -40,17 +40,17 @@
       var quadrant_data = data['quadrants'][quadrantIndex];
       console.log(quadrant_data.name)
       var quadrant = new tr.models.Quadrant(quadrant_data.name);
-      var adoptBlips = quadrant_data.adopt.map(function(itemName) {
-	return new tr.models.Blip(itemName, adopt, true);
+      var adoptBlips = quadrant_data.adopt.map(function(item) {
+	return new tr.models.Blip(item.name, adopt, true, item.description);
       });
-      var trialBlips = quadrant_data.trial.map(function(itemName) {
-	return new tr.models.Blip(itemName, trial, true);
+      var trialBlips = quadrant_data.trial.map(function(item) {
+	return new tr.models.Blip(item.name, trial, true, item.description);
       });
-      var assessBlips = quadrant_data.assess.map(function(itemName) {
-	return new tr.models.Blip(itemName, assess, true);
+      var assessBlips = quadrant_data.assess.map(function(item) {
+	return new tr.models.Blip(item.name, assess, true, item.description);
       });
-      var holdBlips = quadrant_data.hold.map(function(itemName) {
-	return new tr.models.Blip(itemName, hold, true);
+      var holdBlips = quadrant_data.hold.map(function(item) {
+	return new tr.models.Blip(item.name, hold, true, item.description);
       });
       var blips = [].concat(adoptBlips, trialBlips, assessBlips, holdBlips);
       console.log(blips);
